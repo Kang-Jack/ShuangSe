@@ -1,2 +1,2 @@
 # ShuangSe
-lottery
+lottery a study case
