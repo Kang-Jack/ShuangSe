@@ -46,4 +46,6 @@ if __name__ == '__main__':
     rs=get_one_year_data_('2008')
     #get_data_indentifier_range('2009001','2010160')
     frame =DataFrame(rs)
-    print  frame[0]
+    print  frame[0][:10]
+    frame[0][:10].plot(kind='barh',rot=0)
+    print frame.values[0]
