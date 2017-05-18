@@ -10,7 +10,7 @@ class dblottery:
 
     host = 'localhost' #'8.34.215.127''localhost'
     user = 'root'
-    password = 'd2000-slb'
+    password = 'xxxxxxx'
     db = 'lottery'
 
     def __init__(self):
