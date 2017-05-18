@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS `doubleball` (
   `BLUE` VARCHAR(2)  NOT NULL ,
   PRIMARY KEY (`IDENTIFIER`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+delete  from doubleball where 1=1;
