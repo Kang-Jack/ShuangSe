@@ -1,9 +1,11 @@
 from pandas import DataFrame, Series
 import pandas as pd
 import numpy as np
-class matrix_data:
+debug =1
+
+class census_data:
     @staticmethod
-    def parse_red_balls(data):
+    def get_red_matrix(data):
         count=len(data)
         if count <1:
             return [[]]
@@ -15,7 +17,7 @@ class matrix_data:
         return red_matrix
 
     @staticmethod
-    def parse_blue_ball(data):
+    def get_blue_matrix(data):
         count=len(data)
         if count <1:
             return [[]]
@@ -26,7 +28,7 @@ class matrix_data:
         return blue_matrix
 
     @staticmethod
-    def parse_date_id_map(data):
+    def get_date_id_map(data):
         count=len(data)
         if count <1:
             return [[]]
@@ -36,4 +38,26 @@ class matrix_data:
             data_map[i][0] = data[i][0]
             data_map[i][1] = data[i][1]
         return data_map
-        
+
+    @staticmethod
+    def calc_per(num,total):
+        return "%.2f%%" % (float(num)/float(total)*100)
+
+    @staticmethod
+    def get_sum_info (df,isBlue):
+        count = len(df.index)
+        if count <1:
+            return
+        maxN = 34
+        if isBlue :
+            maxN=17
+        append_data = [[0 for i in range(maxN)] for i in range (2)]
+        #print append_data
+        sumN=0
+        for i in range (1,maxN):
+            if debug==1:print i
+            append_data[0][i] = sum(df[i])
+            sumN=sumN+append_data[0][i]
+            append_data[1][i] = census_data.calc_per(append_data[0][i],count)
+        if debug==1:print sumN
+        return append_data
