@@ -5,7 +5,7 @@ debug=1
 db = dblottery.dblottery()
 i=0
 for year in range (2003,2016):
-    book = xlrd.open_workbook(r"./data/"+str(year)+".xlsx")
+    book = xlrd.open_workbook(r"../data/"+str(year)+".xlsx")
     if debug : print("The number of worksheets is {0}".format(book.nsheets))
     if debug : print("Worksheet name(s): {0}".format(book.sheet_names()))
     sh = book.sheet_by_index(0)
