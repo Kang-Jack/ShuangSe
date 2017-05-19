@@ -8,9 +8,9 @@ class matrix_data:
         if count <1:
             return [[]]
         red_matrix=np.zeros((count,34), dtype=np.int)
-        for i in range (0,count):
+        for i in range (count):
             red_matrix[i][0] = data[i][0]
-            for j in range(2,7): # Red balls in 2-7 
+            for j in range(2,8): # Red balls in 2-7 
                 red_matrix[i][int(data[i][j])] = 1
         return red_matrix
 
@@ -20,7 +20,7 @@ class matrix_data:
         if count <1:
             return [[]]
         blue_matrix=np.zeros((count,17), dtype=np.int)
-        for i in range (0,count):
+        for i in range (count):
             blue_matrix[i][0] = data[i][0]
             blue_matrix[i][int(data[i][8])] = 1
         return blue_matrix
