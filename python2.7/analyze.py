@@ -2,6 +2,7 @@ import dblottery
 from pandas import DataFrame, Series
 import pandas as pd
 import numpy as np
+import time
 from census import census_data
 debug=1
 db = dblottery.dblottery()
@@ -52,8 +53,8 @@ def parse_row_data(row):
 
 if __name__ == '__main__':
     #rs = get_one_year_data_('2008')
-    #rs = get_data_indentifier_range('2009001','2010160')
-    rs=get_all_data()
+    rs = get_data_indentifier_range('2017001','2017060')
+    #rs=get_all_data()
     if debug==1:print len(rs)
     if debug==1:print (rs[0])
     if debug==1:print (rs[len(rs)-1])
@@ -63,6 +64,11 @@ if __name__ == '__main__':
     map_frame = DataFrame(census_data.get_date_id_map(rs))
     red_matrix_frame = red_matrix_frame.append (census_data.get_sum_info(red_matrix_frame,False))
     blue_matrix_frame = blue_matrix_frame.append (census_data.get_sum_info(blue_matrix_frame,True))
+    ts= str(time.time())
+    print ts
+    red_matrix_frame.to_csv(r"./result/red"+ts+".csv",index=False)
+    blue_matrix_frame.to_csv(r"./result/blue"+ts+".csv",index=False)
+    map_frame.to_csv(r"./result/map"+ts+".csv",index=False)
     #if debug==1:print census_data.get_sum_info(red_matrix_frame,False)
     #if debug==1:print census_data.get_sum_info(blue_matrix_frame,True)
     #print calc_per(sum(red_matrix_frame[1]),len(rs))
