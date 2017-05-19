@@ -56,7 +56,7 @@ if __name__ == '__main__':
     rs=get_all_data()
     if debug==1:print len(rs)
     if debug==1:print (rs[0])
-    if debug==1:print (rs[153])
+    if debug==1:print (rs[len(rs)-1])
 
     red_matrix_frame = DataFrame(census_data.get_red_matrix(rs))
     blue_matrix_frame = DataFrame(census_data.get_blue_matrix(rs))
