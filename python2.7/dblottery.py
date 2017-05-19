@@ -10,7 +10,7 @@ class dblottery:
 
     host = 'localhost' #'8.34.215.127''localhost'
     user = 'root'
-    password = 'xxxxxxx'
+    password = 'xxxxxx'
     db = 'lottery'
 
     def __init__(self):
@@ -27,7 +27,7 @@ class dblottery:
             print("operation faild, Error:", e)
 
     def query(self, query):
-        cursor = self.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor = self.connection.cursor(MySQL.cursors.DictCursor)
         cursor.execute(query)
         return cursor.fetchall()
 
