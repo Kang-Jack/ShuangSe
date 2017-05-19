@@ -11,32 +11,38 @@ def get_one_year_data_(year):
     rows =db.query(r"SELECT * FROM lottery.doubleball where doubleball.GENERATE_TIME like '"+year+"%'")
     for row in rows:
         data.append(parse_row_data(row))
-        if debug==1: print str(rows[0]["IDENTIFIER"])
-        if debug==1: print rows[0]["GENERATE_TIME"].strip("\"")
-        if debug==1: print rows[0]["RED1"].strip("\"")
+    if debug==1: print str(rows[0]["IDENTIFIER"])
+    if debug==1: print rows[0]["GENERATE_TIME"].strip("\"")
+    if debug==1: print rows[0]["RED1"].strip("\"")
     #if debug==1: print data
     return data
 
 def get_data_indentifier_range(year_begin,year_end):
+    data=[]
     rows =db.query(r"SELECT * FROM lottery.doubleball where doubleball.IDENTIFIER between "+year_begin+" and "+ year_end )
-    #for row in rows:
+    for row in rows:
+        data.append(parse_row_data(row))
     if debug==1: print str(rows[0]["IDENTIFIER"])
     if debug==1: print rows[0]["GENERATE_TIME"].strip("\"")
     if debug==1: print rows[0]["RED1"].strip("\"")
     if debug==1: print str(rows[len(rows)-1]["IDENTIFIER"]).strip("\"")
     if debug==1: print rows[len(rows)-1]["GENERATE_TIME"].strip("\"")
     if debug==1: print rows[len(rows)-1]["RED1"].strip("\"")
-
+    #if debug==1: print data
+    return data
 
 def get_all_data():
+    data=[]
     rows =db.query(r"SELECT * FROM lottery.doubleball where 1=1 " )
-    #for row in rows:
+    for row in rows:
+        data.append(parse_row_data(row))
     if debug==1: print str(rows[0]["IDENTIFIER"])
     if debug==1: print rows[0]["GENERATE_TIME"].strip("\"")
     if debug==1: print rows[0]["RED1"].strip("\"")
     if debug==1: print str(rows[len(rows)-1]["IDENTIFIER"]).strip("\"")
     if debug==1: print rows[len(rows)-1]["GENERATE_TIME"].strip("\"")
     if debug==1: print rows[len(rows)-1]["RED1"].strip("\"")
+    return data
 
 def parse_row_data(row):
     return [row["IDENTIFIER"],row["GENERATE_TIME"].strip("\""),row["RED1"].strip("\""),\
@@ -44,7 +50,8 @@ def parse_row_data(row):
     row["RED5"].strip("\""),row["RED6"].strip("\""),row["BLUE"].strip("\"")]
 
 if __name__ == '__main__':
-    rs=get_one_year_data_('2008')
+    #rs=get_one_year_data_('2008')
+    rs=get_all_data()
     print len(rs)
     print (rs[0])
     print (rs[153])
