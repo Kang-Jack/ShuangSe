@@ -41,7 +41,9 @@ class census_data:
 
     @staticmethod
     def calc_per(num,total):
-        return "%.2f%%" % (float(num)/float(total)*100)
+        return (float(num)/float(total)*100)
+
+        #return "%.2f%%" % (float(num)/float(total)*100)
 
     @staticmethod
     def get_sum_info (df,isBlue):
@@ -55,9 +57,38 @@ class census_data:
         #print append_data
         sumN=0
         for i in range (1,maxN):
-            if debug==1:print i
+            #if debug==1:print i
             append_data[0][i] = sum(df[i])
             sumN=sumN+append_data[0][i]
             append_data[1][i] = census_data.calc_per(append_data[0][i],count)
-        if debug==1:print sumN
+        #if debug==1:print sumN
         return append_data
+    @staticmethod
+    def check_same_rate_blue(ballrates,isBlue):
+        maxN = 33
+        if isBlue :
+            maxN=16
+        new = sorted(ballrates,reverse=False)
+        maxDiff = float(new[maxN])-float(new[1])
+        '''print ballrates
+        if debug==1:print new
+        if debug==1:print new[0]
+        if debug==1:print new[1]
+        if debug==1:print new[maxN]'''
+        if debug==1:print maxDiff
+        return maxDiff<2
+
+    @staticmethod
+    def find_same_rate_scale_blue(alldf):
+        count = len(alldf.index)
+        if count <1:
+            return [[]]
+        #for i in range(2106,2108):
+        for i in range(1359):
+            endIndex=i+1000
+            if endIndex < count: 
+                suminfo = census_data.get_sum_info(alldf[i:endIndex],True)
+                if census_data.check_same_rate_blue(suminfo[1],True) :
+                    print 'the scale is :' +str(i) +'line'
+
+        
