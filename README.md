@@ -1,2 +1,2 @@
 # ShuangSe
-lottery a study case
+lottery a python study case of data science

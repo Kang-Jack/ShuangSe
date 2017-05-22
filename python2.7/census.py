@@ -76,7 +76,7 @@ class census_data:
         if debug==1:print new[1]
         if debug==1:print new[maxN]'''
         if debug==1:print maxDiff
-        return maxDiff<2
+        return maxDiff<6
 
     @staticmethod
     def find_same_rate_scale_blue(alldf):
@@ -84,8 +84,8 @@ class census_data:
         if count <1:
             return [[]]
         #for i in range(2106,2108):
-        for i in range(1359):
-            endIndex=i+1000
+        for i in range(1859):
+            endIndex=i+200
             if endIndex < count: 
                 suminfo = census_data.get_sum_info(alldf[i:endIndex],True)
                 if census_data.check_same_rate_blue(suminfo[1],True) :
