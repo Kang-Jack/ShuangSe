@@ -49,6 +49,10 @@ class dblottery:
             self.cursor.execute(insert_sql, (identifier, lottery_date, r1 ,r2, r3, r4, r5,r6,b1))
             self.connection.commit()
             return 1
+        except MySQL.IntegrityError:
+            pass
+            print("duplicate indentifier %s" % (identifier))
+            return 0
         except:
             e = sys.exc_info()[0]
             self.connection.rollback()

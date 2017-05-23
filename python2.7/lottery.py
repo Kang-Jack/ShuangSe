@@ -52,10 +52,10 @@ def saveNewData2CSV(csvFile,startNo,endNo):
             writer.writerow((lottery_qihao[0][1],handleRedBalls(lottery_haoma_red),handleBlueBalls(lottery_haoma_blue),str(lottery_date[0])))
             #out_line = str(lottery_date) + lottery_qihao[0][1] + str(lottery_haoma_red) + str(lottery_haoma_blue) + '\n'
             #output.write(out_line)
-def saveNewData2DB():
+def saveNewData2DB(startNo,endNo):
     db = dblottery.dblottery()
     #output = file('2016-2017data.txt', 'w+')
-    req_html_doc = requests.get("http://baidu.lecai.com/lottery/draw/list/50?type=range&start=2016001&end=2017100").text
+    req_html_doc = requests.get("http://baidu.lecai.com/lottery/draw/list/50?type=range&start="+startNo+"&end="+endNo).text
     my_soup = BeautifulSoup(req_html_doc)
     result = my_soup.findAll('tr')
     i=0
@@ -107,11 +107,11 @@ if __name__ == '__main__':
             sys.exit()
     print startNo
     print endNo
-    #saveNewData2DB()
-    csvFile = file(startNo+'-'+endNo+'data.csv', 'w+')
+    saveNewData2DB(startNo,endNo)
+    '''csvFile = file(startNo+'-'+endNo+'data.csv', 'w+')
     try:
         saveNewData2CSV(csvFile,startNo,endNo)
     except Exception,e:  
         print Exception,":",e
     finally:
-        csvFile.close()
+        csvFile.close()'''
