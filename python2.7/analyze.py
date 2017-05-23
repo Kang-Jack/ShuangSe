@@ -3,8 +3,9 @@ from pandas import DataFrame, Series
 import pandas as pd
 import numpy as np
 import time
+import sys, getopt
 from census import census_data
-debug=0
+debug=1
 db = dblottery.dblottery()
 
 def get_one_year_data_(year):
@@ -50,11 +51,40 @@ def parse_row_data(row):
     row["RED2"].strip("\""),row["RED3"].strip("\""),row["RED4"].strip("\""),\
     row["RED5"].strip("\""),row["RED6"].strip("\""),row["BLUE"].strip("\"")]
 
+def usage():
+    print (r'Get all data by default')
+    print (r'-s: Start of lottery No.')
+    print (r'-e: End of  lottery No.')
+    print (r'-y: Get single year data')
+    print (r'-h: Help')
 
 if __name__ == '__main__':
-    #rs = get_one_year_data_('2008')
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:e:y:')
+    startNo=''
+    endNo=''
+    singleY=''
+    for op, value in opts:
+        if op == '-s':
+            startNo = value
+        elif op == '-e':
+            endNo = value
+        elif op == '-y':
+            singleY = value
+        elif op == '-h':
+            usage()
+            sys.exit()
+    if debug : print startNo
+    if debug : print endNo
+    if debug : print singleY
+    rs=[]
+    if startNo != '' and endNo !='':
+        rs = get_data_indentifier_range(startNo,endNo)
+    elif singleY !='':
+        rs = get_one_year_data_(singleY)
+    else:
+        rs = get_all_data()
     #rs = get_data_indentifier_range('2013001','2013160')
-    rs=get_all_data()
+    #rs=get_all_data()
     if debug==1:print len(rs)
     if debug==1:print (rs[0])
     if debug==1:print (rs[len(rs)-1])
