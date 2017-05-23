@@ -99,14 +99,14 @@ if __name__ == '__main__':
     endNo=str(now.year)+'160'
     for op, value in opts:
         if op == "-s":
-            start_No = value
+            startNo = value
         elif op == "-e":
             endNo = value
         elif op == "-h":
             usage()
             sys.exit()
-    print startNo
-    print endNo
+    if debug : print startNo
+    if debug : print endNo
     saveNewData2DB(startNo,endNo)
     '''csvFile = file(startNo+'-'+endNo+'data.csv', 'w+')
     try:
