@@ -3,6 +3,8 @@ import requests,re,time    #urllib for python3
 from bs4 import BeautifulSoup
 import csv
 import dblottery
+import sys, getopt
+import datetime
 debug=1
 def handleRedBalls(redballs):
     strballs=''
@@ -17,10 +19,10 @@ def handleBlueBalls(blueballs):
     if lenballs == 1:
         strball =str(blueballs[0])
     return strball
-def saveNewData2CSV(csvFile):
+def saveNewData2CSV(csvFile,startNo,endNo):
     writer = csv.writer(csvFile)
     #output = file('2016-2017data.txt', 'w+')
-    req_html_doc = requests.get("http://baidu.lecai.com/lottery/draw/list/50?type=range&start=2016001&end=2017100").text
+    req_html_doc = requests.get("http://baidu.lecai.com/lottery/draw/list/50?type=range&start="+startNo+"&end="+endNo).text
     my_soup = BeautifulSoup(req_html_doc)
     result = my_soup.findAll('tr')
     for each in result:
@@ -85,13 +87,31 @@ def saveNewData2DB():
             db.insert_doubleball(int(lottery_qihao[0][1]),str(lottery_date[0]),str(lottery_haoma_red[0]),str(lottery_haoma_red[1]),str(lottery_haoma_red[2]),str(lottery_haoma_red[3]),str(lottery_haoma_red[4]),str(lottery_haoma_red[5]),str(lottery_haoma_blue[0]))
             i=i+1
     if debug: print i
+def usage():
+    print (r'-s: Start of lottery No., defualt current year + 001')
+    print (r'-e: End of  lottery No., defualt current year + 160')
+    print (r'-h: Help')
+
 if __name__ == '__main__':
-    saveNewData2DB()
-    '''csvFile = file('2016-2017data.csv', 'w+')
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:e:')
+    now = datetime.datetime.now()
+    startNo=str(now.year)+'001'
+    endNo=str(now.year)+'160'
+    for op, value in opts:
+        if op == "-s":
+            start_No = value
+        elif op == "-e":
+            endNo = value
+        elif op == "-h":
+            usage()
+            sys.exit()
+    print startNo
+    print endNo
+    #saveNewData2DB()
+    csvFile = file(startNo+'-'+endNo+'data.csv', 'w+')
     try:
-        saveNewData2CSV(csvFile)
+        saveNewData2CSV(csvFile,startNo,endNo)
     except Exception,e:  
         print Exception,":",e
     finally:
-        csvFile.close()'''
-  
+        csvFile.close()
