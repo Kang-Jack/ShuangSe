@@ -11,7 +11,7 @@ class historical_data:
     def __init__(self):
         self.db = dblottery.dblottery()
 
-    def get_one_year_data_(self,year):
+    def get_one_year_data(self,year):
         data=[]
         rows =self.db.query(r"SELECT * FROM lottery.doubleball where doubleball.GENERATE_TIME like '"+year+"%'")
         for row in rows:
@@ -63,7 +63,9 @@ class historical_data:
         print (r'-h: Help')
 
 if __name__ == '__main__':
+    historical_data=historical_data()
     opts, args = getopt.getopt(sys.argv[1:], 'hs:e:y:')
+    csv_name='querycsv'
     startNo=''
     endNo=''
     singleY=''
@@ -75,15 +77,22 @@ if __name__ == '__main__':
         elif op == '-y':
             singleY = value
         elif op == '-h':
-            usage()
+            historical_data.usage()
             sys.exit()
     if debug : print startNo
     if debug : print endNo
     if debug : print singleY
     rs=[]
     if startNo != '' and endNo !='':
-        rs = get_data_indentifier_range(startNo,endNo)
+        rs = historical_data.get_data_indentifier_range(startNo,endNo)
+        csv_name=startNo+'-'+endNo+'-data'
     elif singleY !='':
-        rs = get_one_year_data_(singleY)
+        rs = historical_data.get_one_year_data(singleY)
+        csv_name=singleY+'-data'
     else:
-        rs = get_all_data()
+        rs = historical_data.get_all_data()
+        csv_name='ALL-data'
+    df =DataFrame(rs)
+    df.to_csv('./result/'+csv_name+'.csv',index=False)
+    print df
+

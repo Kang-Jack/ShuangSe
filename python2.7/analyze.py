@@ -32,7 +32,7 @@ if __name__ == '__main__':
     if startNo != '' and endNo !='':
         rs = historical_data.get_data_indentifier_range(startNo,endNo)
     elif singleY !='':
-        rs = historical_data.get_one_year_data_(singleY)
+        rs = historical_data.get_one_year_data(singleY)
     else:
         rs = historical_data.get_all_data()
     #rs = get_data_indentifier_range('2013001','2013160')
