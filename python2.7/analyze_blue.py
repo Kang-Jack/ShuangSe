@@ -69,8 +69,8 @@ class analyze_blue:
 
         dfLength= len(df)
         row=df[0:1]
-        print dfLength
-        print row
+        if debug==1:print dfLength
+        if debug==1:print row
         #remove table head
         for i in range (dfLength): 
             if i<1:
