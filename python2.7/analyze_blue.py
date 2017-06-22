@@ -3,6 +3,7 @@ import time
 from pandas import DataFrame, Series
 import pandas as pd
 import numpy as np
+
 debug =0
 
 class analyze_blue:
@@ -56,9 +57,9 @@ class analyze_blue:
         return rs
 
     @staticmethod
-    def calc_probability (df):
-        MaxShow=6    # Max show time in Trust Zone
-        TrustNum=55  # define Trust Zone scope
+    def calc_probability (df,max_show,trust_num):
+        MaxShow=max_show    # Max show time in Trust Zone
+        TrustNum=trust_num  # define Trust Zone scope
         sumShows=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  # record summary of show times for each col
         #get summary of current col
         #SumCol= SumCurrentCol(Col)             
@@ -106,3 +107,49 @@ class analyze_blue:
                 if debug==1:print tempR[j]
             rs.append(tempR)
         return rs
+
+    @staticmethod
+    def get_probability_matrix (df,dfCensusResult): 
+        census_length=len(dfCensusResult)
+        row =dfCensusResult[0:1]
+        previous_line=0
+        rs=[[]]
+        for i in range (census_length+1):
+            if i == 0:
+                continue
+            row =dfCensusResult[i-1:i]
+            end_line= row[0].values[0]+1
+            df3 = analyze_blue.get_blue_sum_frame(df,previous_line,end_line)
+            #df3 =analyze_blue.analyze_blue.get_blue_sum_frame(blue_matrix_frame,0,105)
+            if debug==1:print row['max'].values[0].astype(int)
+            if debug==1:print row['length'].values[0]
+            temp_rs = analyze_blue.calc_probability(df3,row['max'].values[0].astype(int),row['length'].values[0])
+            if i==1:
+                rs=temp_rs
+            else :
+                rs=np.concatenate((rs, temp_rs))
+            previous_line=end_line
+        return rs
+
+if __name__ == '__main__':
+    import dblottery
+    from query_historical_data import historical_data
+    from census import census_data
+    db = dblottery.dblottery()
+
+    historical_data=historical_data()
+    rs=historical_data.get_all_data()
+    blue_matrix_frame = DataFrame(census_data.get_blue_matrix(rs))
+
+    df= blue_matrix_frame.loc[:,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]].cumsum()
+    df[17]=blue_matrix_frame[0]
+    df['index']=df.index
+    df.to_csv('summaryBlue.csv',index=False)
+    dfCensusResult= analyze_blue.get_blue_census(df)
+    #print dfCensusResult
+    rs = analyze_blue.get_probability_matrix(blue_matrix_frame,dfCensusResult)
+
+    rs_df=DataFrame(rs)
+    rs_df['IDENTIFIER']=df[17]
+    #print rs_df
+    #rs_df.to_csv('CensusBlue.csv',index=False)
