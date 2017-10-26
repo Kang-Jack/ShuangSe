@@ -1,18 +1,18 @@
-#http://datachart.500.com/ssq/history/newinc/history.php?limit=5
-#http://datachart.500.com/ssq/history/newinc/history.php?start=17090&end=17096
-import urllib.request
-import re, time  #  requests for python2
-from bs4 import BeautifulSoup
 import csv
-import dblottery
-import sys, getopt
 import datetime
+import getopt
+import re
+import sys
+import urllib.request
+
+from bs4 import BeautifulSoup
+
+import dblottery
 
 debug = 1
 
 
 def handleRedBalls(redballs):
-    strballs = ''
     lenballs = len(redballs)
     if lenballs == 6:
         strball = str(
@@ -22,20 +22,18 @@ def handleRedBalls(redballs):
 
 
 def handleBlueBalls(blueballs):
-    strballs = ''
     lenballs = len(blueballs)
     if lenballs == 1:
         strball = str(blueballs[0])
     return strball
 
 
-def saveNewData2CSV(csvFile, startNo, endNo):
+def saveNewData2CSV(csvFile, limit):
     writer = csv.writer(csvFile)
     # output = file('2016-2017data.txt', 'w+')
     # req_html_doc = requests.get("http://baidu.lecai.com/lottery/draw/list/50?type=range&start="+startNo+"&end="+endNo).text
-    my_soup = fetch_page_content(150)
+    my_soup = fetch_page_content(limit)
     result = my_soup.findAll('tr')
-    i = 0
     for each in result:
         # parse Lottery SN
         lottery_qihao = parse_qihao(each)
@@ -55,14 +53,14 @@ def saveNewData2CSV(csvFile, startNo, endNo):
 
 def insert_to_csv(lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_qihao, writer):
     writer.writerow((
-        lottery_qihao[0][1], handleRedBalls(lottery_haoma_red), handleBlueBalls(lottery_haoma_blue),
+        "20" + lottery_qihao[0], handleRedBalls(lottery_haoma_red), handleBlueBalls(lottery_haoma_blue),
         str(lottery_date[0])))
 
 
-def saveNewData2DB(startNo, endNo):
+def saveNewData2DB(limit):
     db = dblottery.dblottery()
     # output = file('2016-2017data.txt', 'w+')
-    my_soup = fetch_page_content(150)
+    my_soup = fetch_page_content(limit)
     result = my_soup.findAll('tr')
     i = 0
     for each in result:
@@ -89,6 +87,8 @@ def insert_to_db(db, lottery_date, lottery_haoma_blue, lottery_haoma_red, lotter
 
 
 def fetch_page_content(limit):
+    # http://datachart.500.com/ssq/history/newinc/history.php?limit=5
+    # http://datachart.500.com/ssq/history/newinc/history.php?start=17090&end=17096
     print("http://datachart.500.com/ssq/history/newinc/history.php")
     req = urllib.request.Request("http://datachart.500.com/ssq/history/newinc/history.php?limit="+str(limit)+"&sort=0")
     with urllib.request.urlopen(req) as response:
@@ -131,27 +131,23 @@ def parse_date_info(each):
 
 
 def usage():
-    print (r'-s: Start of lottery No., defualt current year + 001')
-    print (r'-e: End of  lottery No., defualt current year + 160')
+    print (r'-l: fetch limit recorder No. ')
     print (r'-h: Help')
 
 
 if __name__ == '__main__':
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:e:')
+    opts, args = getopt.getopt(sys.argv[1:], 'hl:')
     now = datetime.datetime.now()
     startNo = str(now.year) + '001'
     endNo = str(now.year) + '160'
+    limit = '50'
     for op, value in opts:
-        if op == "-s":
-            startNo = value
-        elif op == "-e":
-            endNo = value
+        if op == "-l":
+            limit = value
         elif op == "-h":
             usage()
             sys.exit()
-    if debug: print (startNo)
-    if debug: print (endNo)
-    saveNewData2DB(startNo, endNo)
+    saveNewData2DB(limit)
     '''csvFile = file(startNo+'-'+endNo+'data.csv', 'w+')
     try:
         saveNewData2CSV(csvFile,startNo,endNo)
