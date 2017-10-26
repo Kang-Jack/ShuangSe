@@ -1,0 +1,5 @@
+#bs4==0.0.1
+# mysql-python==1.2.5
+#PyMySQL==0.7.11
+#requests==2.14.2
+xlrd==1.0.0
