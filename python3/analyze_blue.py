@@ -1,8 +1,7 @@
 from __future__ import division
-import time
-from pandas import DataFrame, Series
-import pandas as pd
+
 import numpy as np
+from pandas import DataFrame
 
 debug =0
 

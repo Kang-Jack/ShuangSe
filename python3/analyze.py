@@ -1,11 +1,13 @@
-import dblottery
-from pandas import DataFrame, Series
-import pandas as pd
-import numpy as np
+import getopt
+import sys
 import time
-import sys, getopt
+
+from pandas import DataFrame
+
+import dblottery
 from census import census_data
 from query_historical_data import historical_data
+
 debug=1
 db = dblottery.dblottery()
 historical_data=historical_data()
