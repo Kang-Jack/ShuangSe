@@ -1,7 +1,8 @@
 #!d:/python32/python
 import random
 import re
-
+from pandas import DataFrame
+from query_historical_data import historical_data
 
 class shuangseqiu():
     def __init__(self):
@@ -51,6 +52,8 @@ class shuangseqiu():
         ball_lst = ball_file.readline()
         for i in range(1, self.qishu[2]):
             ball_lst = ball_file.readline().split()
+            if len(ball_lst) <11:
+                break
             # print(ball_lst)
             # red = ball_list[5:11]
             # blue = ball_list[11:]
@@ -164,6 +167,15 @@ class shuangseqiu():
         print('         自选概率为：%0.10f%%' % (self.gailv(c) * 100))
         print('--------------------------------------------------')
 
+def generate_txt(historical_data_obj):
+    rs = historical_data.get_all_data()
+    df = DataFrame(rs)
+    df.insert(0, 'year', df[0].astype(str).str[:4])
+
+    #print (df.head(5))
+    #df.insert(0, 'year', dfi)
+    #df = DataFrame(rs)
+    df.to_csv(r'./123.txt', header=None, index=True, sep=' ', mode='w')
 
 def print_all(shuangseqiu_obj):
     print('''
@@ -190,6 +202,8 @@ def print_all(shuangseqiu_obj):
 
 
 if __name__ == '__main__':
+    historical_data = historical_data()
+    #generate_txt(historical_data)
     b = shuangseqiu()
     b.init_data()
     print_all(b)
