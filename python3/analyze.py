@@ -48,23 +48,24 @@ class shuangseqiu():
 
     def __readdata__(self):
         # 从文件读取彩票中奖纪录
-        ball_file = open(self.fle, 'r')
-        ball_lst = ball_file.readline()
-        for i in range(1, self.qishu[2]):
-            ball_lst = ball_file.readline().split()
-            if len(ball_lst) <11:
-                break
-            # print(ball_lst)
-            # red = ball_list[5:11]
-            # blue = ball_list[11:]
-            # print(ball_lst)
-            ball_lst = ball_lst[4:]
-            if i <= self.qishu[0]:
-                self.__countlst__(ball_lst, self.data_long[0])
-            if i <= self.qishu[1]:
-                self.__countlst__(ball_lst, self.data_long[1])
-            self.__countlst__(ball_lst, self.data_long[2])
-        ball_file.close()
+        with open(self.fle, encoding='utf8') as ball_file:
+        #ball_file = open(self.fle, 'r')
+            ball_lst = ball_file.readline()
+            for i in range(1, self.qishu[2]):
+                ball_lst = ball_file.readline().split()
+                if len(ball_lst) <11:
+                    break
+                # print(ball_lst)
+                # red = ball_list[5:11]
+                # blue = ball_list[11:]
+                # print(ball_lst)
+                ball_lst = ball_lst[4:]
+                if i <= self.qishu[0]:
+                    self.__countlst__(ball_lst, self.data_long[0])
+                if i <= self.qishu[1]:
+                    self.__countlst__(ball_lst, self.data_long[1])
+                self.__countlst__(ball_lst, self.data_long[2])
+            ball_file.close()
         # print(self.red_dict)
         # print('------------------------')
         # print(self.blue_dict)
@@ -169,13 +170,13 @@ class shuangseqiu():
 
 def generate_txt(historical_data_obj):
     rs = historical_data.get_all_data()
-    df = DataFrame(rs)
+    df = DataFrame(rs).sort_index(ascending=False)
     df.insert(0, 'year', df[0].astype(str).str[:4])
 
     #print (df.head(5))
     #df.insert(0, 'year', dfi)
     #df = DataFrame(rs)
-    df.to_csv(r'./123.txt', header=None, index=True, sep=' ', mode='w')
+    df.to_csv(r'./123.txt', header=None, index=True, sep=' ', mode='w',encoding ='utf-8')
 
 def print_all(shuangseqiu_obj):
     print('''
