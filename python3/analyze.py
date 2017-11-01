@@ -1,8 +1,11 @@
 #!d:/python32/python
 import random
 import re
+import getopt
+import sys
 from pandas import DataFrame
 from query_historical_data import historical_data
+from fetch_new_data import saveNewData2DB
 
 class shuangseqiu():
     def __init__(self):
@@ -168,9 +171,18 @@ class shuangseqiu():
         print('         自选概率为：%0.10f%%' % (self.gailv(c) * 100))
         print('--------------------------------------------------')
 
-def generate_txt(historical_data_obj):
-    rs = historical_data.get_all_data()
+def generate_txt(rs):
+    #rs = historical_data.get_all_data()
+    #drinks['beer_servings'] = drinks.beer_servings.astype(float)
+    #df =df.Series([2:8], dtype='int64')
     df = DataFrame(rs).sort_index(ascending=False)
+    df[2] = df[2].astype('int64')
+    df[3] = df[3].astype('int64')
+    df[4] = df[4].astype('int64')
+    df[5] = df[5].astype('int64')
+    df[6] = df[6].astype('int64')
+    df[7] = df[7].astype('int64')
+    df[8] = df[8].astype('int64')
     df.insert(0, 'year', df[0].astype(str).str[:4])
 
     #print (df.head(5))
@@ -201,10 +213,51 @@ def print_all(shuangseqiu_obj):
             print('输入有误')
     print('谢谢使用')
 
+def usage():
+    print(r'based on all data by default')
+    print(r'-s: based on data range, Start of lottery No.')
+    print(r'-e: based on data range, End of  lottery No.')
+    print(r'-y: based on one year data, Get single year data')
+    print(r'-u: need update new record to data base')
+    print(r'-h: Help')
 
 if __name__ == '__main__':
+    debug = 1
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:e:y:u:')
+    startNo = ''
+    endNo = ''
+    singleY = ''
+    isUpdateDB = 'f'
+    for op, value in opts:
+        if op == '-s':
+            startNo = value
+        elif op == '-e':
+            endNo = value
+        elif op == '-y':
+            singleY = value
+        elif op == '-u':
+            isUpdateDB = value
+        elif op == '-h':
+            usage()
+            sys.exit()
+    if isUpdateDB != 'f':
+        if  debug:print('update new 50 records to db ')
+        saveNewData2DB(50)
+
+    if debug:print('fetch records based on user option ')
     historical_data = historical_data()
-    #generate_txt(historical_data)
+
+    rs = []
+    if startNo != '' and endNo != '':
+        rs = historical_data.get_data_indentifier_range(startNo, endNo)
+    elif singleY != '':
+        rs = historical_data.get_one_year_data(singleY)
+    else:
+        usage()
+        rs = historical_data.get_all_data()
+    if debug:print('generate txt file ')
+    generate_txt(rs)
+    if debug:print('shuangseqiu')
     b = shuangseqiu()
     b.init_data()
     print_all(b)
