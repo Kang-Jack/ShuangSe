@@ -5,7 +5,7 @@ import getopt
 import sys
 from pandas import DataFrame
 from query_historical_data import historical_data
-from fetch_new_data import saveNewData2DB
+from fetch_new_lottery_info import saveNewData2DB
 
 class predictor_ss():
     def __init__(self):
