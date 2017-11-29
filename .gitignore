@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 
 iPython/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 *.xml
 *.iml
+=======
+python3/__pycache__
+>>>>>>> 4b6f538cd77a167ba218a613df9468acefd803f6
