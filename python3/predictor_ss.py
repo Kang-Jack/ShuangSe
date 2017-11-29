@@ -7,7 +7,7 @@ from pandas import DataFrame
 from query_historical_data import historical_data
 from fetch_new_data import saveNewData2DB
 
-class shuangseqiu():
+class predictor_ss():
     def __init__(self):
         self.quanzhong = [2.618, 1.618, 4.236]  # 权重，分别为一周统计数据，一月统计数据，一年统计数据与完全随机权重的比值，表示对最后选出的号码的影响力大小，此数据依据最伟大的黄金分割点制定。
         # self.quanzhong = [1,1,1]
@@ -257,7 +257,7 @@ if __name__ == '__main__':
         rs = historical_data.get_all_data()
     if debug:print('generate txt file ')
     generate_txt(rs)
-    if debug:print('shuangseqiu')
-    b = shuangseqiu()
+    if debug:print('predictor_ss')
+    b = predictor_ss()
     b.init_data()
     print_all(b)

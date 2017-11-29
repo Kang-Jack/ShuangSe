@@ -41,43 +41,43 @@ class census_data:
 
     @staticmethod
     def calc_per(num, total):
-        return (float(num) / float(total) * 100)
+        return float(num) / float(total) * 100
 
         # return "%.2f%%" % (float(num)/float(total)*100)
 
     @staticmethod
-    def get_sum_info(df, isBlue):
+    def get_sum_info(df, is_blue):
         count = len(df.index)
         if count < 1:
             return
-        maxN = 34
-        if isBlue:
-            maxN = 17
-        append_data = [[0 for i in range(maxN)] for i in range(2)]
+        max_n = 34
+        if is_blue:
+            max_n = 17
+        append_data = [[0 for i in range(max_n)] for i in range(2)]
         # print append_data
-        sumN = 0
-        for i in range(1, maxN):
+        sum_n = 0
+        for i in range(1, max_n):
             # if debug==1:print i
             append_data[0][i] = sum(df[i])
-            sumN = sumN + append_data[0][i]
+            sum_n = sum_n + append_data[0][i]
             append_data[1][i] = census_data.calc_per(append_data[0][i], count)
-        # if debug==1:print sumN
+        # if debug==1:print sum_n
         return append_data
 
     @staticmethod
     def check_same_rate_blue(ballrates, is_blue):
-        maxN = 33
+        max_n = 33
         if is_blue:
-            maxN = 16
+            max_n = 16
         new = sorted(ballrates, reverse=False)
-        maxDiff = float(new[maxN]) - float(new[1])
+        max_diff = float(new[max_n]) - float(new[1])
         '''print ballrates
         if debug==1:print new
         if debug==1:print new[0]
         if debug==1:print new[1]
-        if debug==1:print new[maxN]'''
-        if debug == 1: print(maxDiff)
-        return maxDiff < 6
+        if debug==1:print new[max_n]'''
+        if debug == 1: print(max_diff)
+        return max_diff < 6
 
     @staticmethod
     def find_same_rate_scale_blue(alldf):
