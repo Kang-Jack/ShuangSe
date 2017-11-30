@@ -7,7 +7,8 @@ import urllib.request
 
 from bs4 import BeautifulSoup
 
-import dblottery
+# dblottery
+import db_lite as dblottery
 
 debug = 1
 
@@ -58,7 +59,7 @@ def insert_to_csv(lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_q
 
 
 def saveNewData2DB(limit):
-    db = dblottery.dblottery()
+    db = dblottery.dblotterylite()
     # output = file('2016-2017data.txt', 'w+')
     my_soup = fetch_page_content(limit)
     result = my_soup.findAll('tr')
@@ -91,6 +92,7 @@ def fetch_page_content(limit):
     # http://datachart.500.com/ssq/history/newinc/history.php?start=17090&end=17096
     print("http://datachart.500.com/ssq/history/newinc/history.php")
     req = urllib.request.Request("http://datachart.500.com/ssq/history/newinc/history.php?limit="+str(limit)+"&sort=0")
+    print ("http://datachart.500.com/ssq/history/newinc/history.php?limit="+str(limit)+"&sort=0")
     with urllib.request.urlopen(req) as response:
         req_html_doc = response.read()
     my_soup = BeautifulSoup(req_html_doc)

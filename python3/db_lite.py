@@ -45,7 +45,7 @@ class dblotterylite:
         insert_sql = """
             INSERT INTO doubleball 
             (IDENTIFIER,GENERATE_TIME,RED1,RED2,RED3,RED4,RED5,RED6,BLUE) 
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            VALUES (?,?,?,?,?,?,?,?,?)
             """
         try:
             print (insert_sql)
