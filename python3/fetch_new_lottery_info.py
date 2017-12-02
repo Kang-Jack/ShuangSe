@@ -76,9 +76,12 @@ def saveNewData2DB(limit):
             # parse blue ball
             lottery_haoma_blue = parse_blue_balls(each)
             # writer.writerow((lottery_qihao[0][1],handleRedBalls(lottery_haoma_red),handleBlueBalls(lottery_haoma_blue),str(lottery_date[0])))
-            insert_to_db(db, lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_qihao)
-            i = i + 1
+            rs = insert_to_db(db, lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_qihao)
+            if (rs == 1):
+                i = i + 1
     if debug: print (i)
+    return i
+
 
 
 def insert_to_db(db, lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_qihao):
