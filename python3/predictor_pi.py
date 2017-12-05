@@ -7,7 +7,7 @@ from fetch_new_lottery_info import saveNewData2DB
 from predictor_ss_lite import predictor_ss
 
 class lottery_display(object):
-    def __init__(self, cad, stations, station_index=0):
+    def __init__(self, cad):
         #self.stations = stations
         #self.station_index = station_index
         self.cad = cad
@@ -16,16 +16,22 @@ class lottery_display(object):
         self.cad.lcd.backlight_on()
         self.cad.lcd.blink_off()
         self.cad.lcd.cursor_off()
-
+        self.historical_data = historical_data()
     @property
     def current_station(self):
         """Returns the current station dict."""
         return self.stations[self.station_index]
 
-    def fetch_new_data(self, event=None):
+    def update_db(self, event=None):
+        if debug: print('fetch records based on user option ')
         newdatacount = saveNewData2DB(50)
         #self.station_index = (self.station_index + 1) % len(self.stations)
         top_line =""
+        if debug: print('generate txt file ')
+
+        rs = []
+        rs = historical_data.get_all_data()
+        generate_txt(rs)
         bottom_line=""
         if newdatacount < 1:
             top_line = "No data updated!"
@@ -34,11 +40,22 @@ class lottery_display(object):
             bottom_line =  "Add :" +str(newdatacount)+" data"
         self.update(top_line,bottom_line)
 
-    def previous_station(self, event=None):
+    def random_draw(self,  top_line,bottom_line,event=None):
+        if debug: print('predictor_ss')
+        b = predictor_ss()
+        b.init_data()
+        rs =  b.print_random()
         self.station_index = (self.station_index - 1) % len(self.stations)
-        self.update()
+        self.update(top_line,bottom_line)
 
-    def update(self, top_line,bottom_line,event=None):
+    def best_draw(self, top_line,bottom_line,event=None):
+        if debug: print('predictor_ss')
+        b = predictor_ss()
+        b.init_data()
+        rs = b.print_best_number()
+        self.update(top_line,bottom_line)
+
+    def update(self,top_line,bottom_line):
         self.cad.lcd.clear()
         self.cad.lcd.set_cursor(0, 0)
         self.cad.lcd.write(top_line)
@@ -71,38 +88,11 @@ def generate_txt(rs):
 
 if __name__ == "__main__":
 
-        debug = 1
-        startNo = ''
-        endNo = ''
-        singleY = ''
-
-        if debug: print('update new 50 records to db ')
-        newdatacount = saveNewData2DB(50)
-
-        if debug: print('fetch records based on user option ')
-        historical_data = historical_data()
-
-        rs = []
-
-        if startNo != '' and endNo != '':
-            rs = historical_data.get_data_indentifier_range(startNo, endNo)
-        elif singleY != '':
-            rs = historical_data.get_one_year_data(singleY)
-        else:
-            rs = historical_data.get_all_data()
-        if debug: print('generate txt file ')
-        generate_txt(rs)
-        if debug: print('predictor_ss')
-        b = predictor_ss()
-        b.init_data()
-        print_all(b)
-
-
-
+    debug = 1
 
     cad = pifacecad.PiFaceCAD()
     global lotterydisplay
-    lotterydisplay = lottery_display(cad, stations)
+    lotterydisplay = lottery_display(cad)
     lotterydisplay.update()
 
     # listener cannot deactivate itself so we have to wait until it has
@@ -113,11 +103,11 @@ if __name__ == "__main__":
     # wait for button presses
     switchlistener = pifacecad.SwitchEventListener(chip=cad)
     switchlistener.register(4, pifacecad.IODIR_ON, end_barrier.wait)
-    switchlistener.register(5, pifacecad.IODIR_ON, lotterydisplay.update)
+    switchlistener.register(5, pifacecad.IODIR_ON, lotterydisplay.best_draw)
     switchlistener.register(
-        6, pifacecad.IODIR_ON, lotterydisplay.previous_station)
+        6, pifacecad.IODIR_ON, lotterydisplay.random_draw)
     switchlistener.register(
-        7, pifacecad.IODIR_ON, lotterydisplay.fetch_new_data)
+        7, pifacecad.IODIR_ON, lotterydisplay.update_db)
 
     switchlistener.activate()
     end_barrier.wait()  # wait unitl exit
