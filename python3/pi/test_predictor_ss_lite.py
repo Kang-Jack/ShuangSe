@@ -1,4 +1,5 @@
 import unittest
+import utils
 from predictor_ss_lite import predictor_ss
 
 class Duration_Test(unittest.TestCase):
@@ -17,7 +18,7 @@ class Duration_Test(unittest.TestCase):
 
     def test_format_str_random(self,):
         rs=[11,12,13,14,15,16,17]
-        top_line,bottom_line = self.sut.format_str(rs,"RAND")
+        top_line,bottom_line = utils.format_str(rs,"RAND")
         print (str (top_line))
         print (str(bottom_line))
         print (len(str (top_line)))
@@ -27,7 +28,7 @@ class Duration_Test(unittest.TestCase):
 
     def test_format_str_max(self, ):
             rs = [11, 12, 13, 14, 15, 16, 17]
-            top_line, bottom_line = self.sut.format_str(rs, "MAX")
+            top_line, bottom_line = utils.format_str(rs, "MAX")
             print(str(top_line))
             print(str(bottom_line))
             print(len(str(top_line)))

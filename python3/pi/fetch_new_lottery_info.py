@@ -8,7 +8,7 @@ import urllib.request
 from bs4 import BeautifulSoup
 
 # dblottery
-from pi import db_lite as dblottery
+import db_lite as dblottery
 
 debug = 1
 
