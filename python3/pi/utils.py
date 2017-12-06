@@ -1,6 +1,6 @@
 from pandas import DataFrame
 
-def format_str(self, rs, type):
+def format_str(rs, type):
     for i in range(0, 4):
         if i == 0:
             top_line = "R:" + str(rs[i])
@@ -16,7 +16,7 @@ def format_str(self, rs, type):
     return top_line, bottom_line
 
 
-def generate_txt(self, rs):
+def generate_txt(rs):
     # rs = historical_data.get_all_data()
     # drinks['beer_servings'] = drinks.beer_servings.astype(float)
     # df =df.Series([2:8], dtype='int64')
