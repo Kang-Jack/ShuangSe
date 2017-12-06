@@ -30,7 +30,7 @@ class lottery_display(object):
         if debug: print('generate txt file ')
 
         rs = []
-        rs = historical_data.get_all_data()
+        rs = self.historical_data.get_all_data()
         self.generate_txt(rs)
         bottom_line=""
         if newdatacount < 1:
