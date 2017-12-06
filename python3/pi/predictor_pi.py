@@ -58,8 +58,7 @@ class lottery_display(object):
         b.init_data()
         rs = b.print_best_number()
         print ('best', rs)
-        rsa = np.asarray(rs, dtype=np.int32)
-        top_line, bottom_line = utils.format_str(rsa, "MAX")
+        top_line, bottom_line = utils.format_str(rs, "MAX")
         self.update(top_line,bottom_line)
 
     def update(self,top_line,bottom_line):
