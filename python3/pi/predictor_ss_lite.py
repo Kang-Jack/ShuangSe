@@ -3,7 +3,7 @@ import random
 import re
 import getopt
 import sys
-import numpy as np
+#import numpy as np
 from  utils import generate_txt
 from query_historical_data_lite import historical_data
 from fetch_new_lottery_info import saveNewData2DB
@@ -162,10 +162,10 @@ class predictor_ss():
         print('--------------------------------------------------')
         print('红球：',red_best_ball , '篮球：', blue_best_ball)
         print('--------------------------------------------------')
-        rs = red_best_ball.append(blue_best_ball)
-        print ('best', rs)
-        rsa = np.asarray(rs, dtype=np.int32)
-        return rsa
+        red_best_ball.append(blue_best_ball)
+        print ('best', red_best_ball)
+        #rsa = np.asarray(rs, dtype=np.int32)
+        return red_best_ball
 
     def print_gl(self):
         print('输入格式为-> \"(1,9,13,21,28,32)(14)\"')
