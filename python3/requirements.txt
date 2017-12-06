@@ -3,3 +3,23 @@
 #PyMySQL==0.7.11
 #requests==2.14.2
 xlrd==1.0.0
+
+duplicate indentifier 2017094
+Error message UNIQUE constraint failed: doubleball.IDENTIFIER
+0
+generate txt file 
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/threading.py", line 920, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.4/threading.py", line 868, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3/dist-packages/pifacecommon/interrupts.py", line 341, in handle_events
+    function(event)
+  File "predictor_pi.py", line 34, in update_db
+    rs = self.historical_data.get_all_data()
+  File "/home/pi/ShuangSe/python3/pi/query_historical_data_lite.py", line 46, in get_all_data
+    rows = self.db.query(r"SELECT * FROM doubleball where 1=1 ")
+  File "/home/pi/ShuangSe/python3/pi/db_lite.py", line 33, in query
+    cursor = self.connection.cursor()
+sqlite3.ProgrammingError: SQLite objects created in a thread can only be used in that same thread.The object was created in thread id 1996288000 and this is thread id 1916781664
