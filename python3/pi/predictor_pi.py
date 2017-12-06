@@ -1,6 +1,7 @@
 from threading import Barrier
 import pifacecad
 import  utils
+import numpy as np
 from query_historical_data_lite import historical_data
 from fetch_new_lottery_info import saveNewData2DB
 from predictor_ss_lite import predictor_ss
@@ -56,7 +57,8 @@ class lottery_display(object):
         b = predictor_ss()
         b.init_data()
         rs = b.print_best_number()
-        top_line, bottom_line = utils.format_str(rs, "MAX")
+        rsa = np.asarray(rs, dtype=np.int32)
+        top_line, bottom_line = utils.format_str(rsa, "MAX")
         self.update(top_line,bottom_line)
 
     def update(self,top_line,bottom_line):
