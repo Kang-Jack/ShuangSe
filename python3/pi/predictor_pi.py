@@ -46,7 +46,7 @@ class lottery_display(object):
         b = predictor_ss()
         b.init_data()
         rs =  b.print_random()
-        top_line,bottom_line = self.format_str(rs,"RAND")
+        top_line,bottom_line = format_str(rs,"RAND")
 
         self.update(top_line,bottom_line)
 
@@ -56,7 +56,7 @@ class lottery_display(object):
         b = predictor_ss()
         b.init_data()
         rs = b.print_best_number()
-        top_line, bottom_line = self.format_str(rs, "MAX")
+        top_line, bottom_line = format_str(rs, "MAX")
         self.update(top_line,bottom_line)
 
     def update(self,top_line,bottom_line):
