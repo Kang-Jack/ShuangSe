@@ -174,6 +174,20 @@ class predictor_ss():
         print('         -------------------------')
         print('         自选概率为：%0.10f%%' % (self.gailv(c) * 100))
         print('--------------------------------------------------')
+    def format_str(self,rs,type):
+            for i in range(0,4):
+                if i==0:
+                    top_line = "R:" + str(rs[i])
+                else:
+                    top_line = top_line + "," +str(rs[i])
+            for i in range (4,6):
+                if i == 4:
+                    bottom_line = str(rs[i])
+                else:
+                    bottom_line = bottom_line+"," +str(rs[i])
+
+            bottom_line =  bottom_line+" B:" +str(rs[6])+" " + type
+            return top_line,bottom_line
 
 def generate_txt(rs):
     #rs = historical_data.get_all_data()

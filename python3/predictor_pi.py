@@ -32,7 +32,7 @@ class lottery_display(object):
 
         rs = []
         rs = historical_data.get_all_data()
-        generate_txt(rs)
+        self.generate_txt(rs)
         bottom_line=""
         if newdatacount < 1:
             top_line = "No data updated!"
@@ -46,8 +46,7 @@ class lottery_display(object):
         b = predictor_ss()
         b.init_data()
         rs =  b.print_random()
-        top_line = rs[:6]
-        bottom_line = rs[6:7]
+        top_line,bottom_line = self.format_str(rs,"RAND")
 
         self.update(top_line,bottom_line)
 
@@ -56,8 +55,7 @@ class lottery_display(object):
         b = predictor_ss()
         b.init_data()
         rs = b.print_best_number()
-        top_line = rs[:6]
-        bottom_line = rs[6:7]
+        top_line, bottom_line = self.format_str(rs, "MAX")
         self.update(top_line,bottom_line)
 
     def update(self,top_line,bottom_line):
@@ -70,6 +68,23 @@ class lottery_display(object):
     def close(self):
         self.cad.lcd.clear()
         self.cad.lcd.backlight_off()
+
+    def format_str(self, rs, type):
+        for i in range(0, 4):
+            if i == 0:
+                top_line = "R:" + str(rs[i])
+            else:
+                top_line = top_line + "," + str(rs[i])
+        for i in range(4, 6):
+            if i == 4:
+                bottom_line = str(rs[i])
+            else:
+                bottom_line = bottom_line + "," + str(rs[i])
+
+        bottom_line = bottom_line + " B:" + str(rs[6]) + " " + type
+        return top_line, bottom_line
+
+
 
     def generate_txt(self,rs):
         #rs = historical_data.get_all_data()
