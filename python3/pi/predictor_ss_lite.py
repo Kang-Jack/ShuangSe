@@ -161,7 +161,7 @@ class predictor_ss():
         print('--------------------------------------------------')
         print('红球：',red_best_ball , '篮球：', blue_best_ball)
         print('--------------------------------------------------')
-        return red_best_ball + blue_best_ball
+        return red_best_ball.append(blue_best_ball)
 
     def print_gl(self):
         print('输入格式为-> \"(1,9,13,21,28,32)(14)\"')
