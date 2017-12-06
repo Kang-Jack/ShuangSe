@@ -152,12 +152,16 @@ class predictor_ss():
         print('--------------------------------------------------')
         print('红球：', random_ball[:6], '篮球：', random_ball[6:7])
         print('--------------------------------------------------')
+        return random_ball
 
     def print_best_number(self):  # 输出中奖概率最高的号码
+        red_best_ball = sorted(list(x[1] for x in sorted(self.red_qz)[-6:]))
+        blue_best_ball = sorted(self.blue_qz)[-1][1]
         print('根据规则选出的最可能中奖的号码如下:')
         print('--------------------------------------------------')
-        print('红球：', sorted(list(x[1] for x in sorted(self.red_qz)[-6:])), '篮球：', sorted(self.blue_qz)[-1][1])
+        print('红球：',red_best_ball , '篮球：', blue_best_ball)
         print('--------------------------------------------------')
+        return red_best_ball + blue_best_ball
 
     def print_gl(self):
         print('输入格式为-> \"(1,9,13,21,28,32)(14)\"')
