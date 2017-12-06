@@ -23,6 +23,7 @@ class lottery_display(object):
 
     def update_db(self, event=None):
         if debug: print('fetch records based on user option ')
+        self.update("fetch","records")
         newdatacount = saveNewData2DB(50)
         #self.station_index = (self.station_index + 1) % len(self.stations)
         top_line =""
@@ -41,6 +42,7 @@ class lottery_display(object):
 
     def random_draw(self,event=None):
         if debug: print('predictor_ss')
+        self.update("random","draw")
         b = predictor_ss()
         b.init_data()
         rs =  b.print_random()
@@ -50,6 +52,7 @@ class lottery_display(object):
 
     def best_draw(self,event=None):
         if debug: print('predictor_ss')
+        self.update("best","draw")
         b = predictor_ss()
         b.init_data()
         rs = b.print_best_number()
@@ -75,7 +78,7 @@ if __name__ == "__main__":
     cad = pifacecad.PiFaceCAD()
     global lotterydisplay
     lotterydisplay = lottery_display(cad)
-    lotterydisplay.update("","")
+    lotterydisplay.update("display","inited")
 
     # listener cannot deactivate itself so we have to wait until it has
     # finished using a barrier.
