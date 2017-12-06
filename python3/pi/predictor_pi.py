@@ -57,6 +57,7 @@ class lottery_display(object):
         b = predictor_ss()
         b.init_data()
         rs = b.print_best_number()
+        print ('best', rs)
         rsa = np.asarray(rs, dtype=np.int32)
         top_line, bottom_line = utils.format_str(rsa, "MAX")
         self.update(top_line,bottom_line)
