@@ -40,7 +40,7 @@ class sina_mail(object):
         s.ehlo()
         s.starttls()
         s.ehlo()
-        s.login('wangxiao_1_2_3@sina.com','ati8500')
+        s.login('wangxiao_1_2_3@sina.com','xxxx')
         s.sendmail('wangxiao_1_2_3@sina.com',['wangxiao_1_2_3@sina.com'], self.msg.as_string())
         s.quit()
         print ("Success")

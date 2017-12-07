@@ -19,7 +19,7 @@ import email.mime.application
 HOST = 'smtp.sina.cn'
 PORT = 587
 USER = 'wangxiao_1_2_3@sina.com'
-PASS = 'ati8500'
+PASS = 'xxxx'
 FROM = 'wangxiao_1_2_3@sina.com'
 
 SUBJECT = 'db'
