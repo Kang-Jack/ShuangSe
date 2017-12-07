@@ -14,7 +14,6 @@ class historical_data:
 
     def __init__(self):
         self.db = dblottery.dblotterylite()
-
     def get_one_year_data(self, year):
         data = []
         rows = self.db.query(r"SELECT * FROM doubleball where doubleball.GENERATE_TIME like '" + year + "%'")

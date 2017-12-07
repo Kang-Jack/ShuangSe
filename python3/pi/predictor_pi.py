@@ -1,22 +1,21 @@
 from threading import Barrier
 import pifacecad
 import  utils
-import numpy as np
 from query_historical_data_lite import historical_data
 from fetch_new_lottery_info import saveNewData2DB
 from predictor_ss_lite import predictor_ss
 
+
+
 class lottery_display(object):
     def __init__(self, cad):
-        #self.stations = stations
-        #self.station_index = station_index
         self.cad = cad
         #self.cad.lcd.store_custom_bitmap(TEMP_SYMBOL_INDEX, TEMP_SYMBOL)
         #self.cad.lcd.store_custom_bitmap(WIND_SYMBOL_INDEX, WIND_SYMBOL)
         self.cad.lcd.backlight_on()
         self.cad.lcd.blink_off()
         self.cad.lcd.cursor_off()
-        self.historical_data = historical_data()
+
     @property
     def current_station(self):
         """Returns the current station dict."""
@@ -29,9 +28,9 @@ class lottery_display(object):
         #self.station_index = (self.station_index + 1) % len(self.stations)
         top_line =""
         if debug: print('generate txt file ')
-
+        historical = historical_data()
         rs = []
-        rs = self.historical_data.get_all_data()
+        rs = historical.get_all_data()
         self.generate_txt(rs)
         bottom_line=""
         if newdatacount < 1:
