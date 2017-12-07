@@ -37,9 +37,9 @@ class sina_mail(object):
 
         s = smtplib.SMTP('smtp.sina.com')
         s.set_debuglevel(1)
-        s.ehlo()
+        #s.ehlo()
         s.starttls()
-        s.ehlo()
+        #s.ehlo()
         s.login('wangxiao_1_2_3@sina.com','xxxx')
         s.sendmail('wangxiao_1_2_3@sina.com',['wangxiao_1_2_3@sina.com'], self.msg.as_string())
         s.quit()
