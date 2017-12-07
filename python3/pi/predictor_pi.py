@@ -31,7 +31,7 @@ class lottery_display(object):
         historical = historical_data()
         rs = []
         rs = historical.get_all_data()
-        self.generate_txt(rs)
+        utils.generate_txt(rs)
         bottom_line=""
         if newdatacount < 1:
             top_line = "No data updated!"
