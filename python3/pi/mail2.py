@@ -25,7 +25,7 @@ class sina_mail(object):
         self.HOST = 'smtp.sina.com'
         self.PORT = 25
         self.USER = 'wangxiao_1_2_3@sina.com'
-        self.PASS = 'raspberry-pi2'
+        self.PASS = 'XXX'
         self.FROM = 'wangxiao_1_2_3@sina.com'
 
         self.SUBJECT = 'db'

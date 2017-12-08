@@ -18,7 +18,7 @@ COMMASPACE = ', '
 
 def main():
     sender = 'wangxiao_1_2_3@sina.com'
-    gmail_password = 'raspberry-pi2'
+    gmail_password = 'XXX'
     # recipients = ['EMAIL ADDRESSES HERE SEPARATED BY COMMAS']
     recipients = ['wangxiao_1_2_3@sina.com']
     # Create the enclosing (outer) message
