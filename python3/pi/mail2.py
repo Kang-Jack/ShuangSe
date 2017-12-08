@@ -16,16 +16,16 @@ from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
+from email.mime.application import MIMEApplication
 from email import encoders
-from base64 import encodebytes
+#from base64 import encodebytes
 
 class sina_mail(object):
     def __init__(self):
         self.HOST = 'smtp.sina.com'
         self.PORT = 25
         self.USER = 'wangxiao_1_2_3@sina.com'
-        self.PASS = 'xxxx'
+        self.PASS = 'raspberry-pi2'
         self.FROM = 'wangxiao_1_2_3@sina.com'
 
         self.SUBJECT = 'db'
@@ -33,7 +33,7 @@ class sina_mail(object):
         self.FAILED_LIST = []
 
     def smtp_sender(self,mail_to):
-        # msg = MIMEMultipart('alternative')
+        # msg = MIMEMultipart('alternative') #when alternative: no attach, but only plain_text
         msg = MIMEMultipart()
         msg['From'] = self.FROM
         msg['To'] = mail_to.encode()
@@ -42,81 +42,53 @@ class sina_mail(object):
               This is a rather nice letter, don't you think?""")
         msg.attach(body)
 
-        # now attach the file
-        #fileMsg = email.mime.base.MIMEBase('application', 'vnd.ms-excel')
-        #fileMsg.set_payload(file('exelFile.xls').read())
-        #email.encoders.encode_base64(fileMsg)
-        #fileMsg.add_header('Content-Disposition', 'attachment;filename=anExcelFile.xls')
-        #msg.attach(fileMsg)
-
-
-        # 构造MIMEBase对象做为文件附件内容并附加到根容器
-        filename = 'lottery.db'
-        ctype, encoding = mimetypes.guess_type(filename)
-        if ctype is None or encoding is not None:
+    # attachment 
+        fn = 'lottery.db'
+        my_mimetype, encoding = mimetypes.guess_type(fn)
+        print (my_mimetype, encoding)
+        if my_mimetype is None or encoding is not None:
             # No guess could be made, or the file is encoded (compressed), so
             # use a generic bag-of-bits type.
-            ctype = 'application/octet-stream'
-        maintype, subtype = ctype.split('/', 1)
+            my_mimetype = 'application/octet-stream'
+
+        maintype, subtype = my_mimetype.split('/', 1) # split only at the first '/'
+        print (maintype, subtype)
         if maintype == 'text':
-            with open(filename) as fp:
+            with open(fn,'rb') as fp:  # 'rb' will send this error: 'bytes' object has no attribute 'encode'
                 # Note: we should handle calculating the charset
-                msg = MIMEText(fp.read(), _subtype=subtype)
+                attachement = MIMEText(fp.read(), _subtype=subtype)
+                fp.close()
         elif maintype == 'image':
-            with open(filename, 'rb') as fp:
-                msg = MIMEImage(fp.read(), _subtype=subtype)
+            with open(fn, 'rb') as fp:
+                attachement = MIMEImage(fp.read(), _subtype=subtype)
+                fp.close()
         elif maintype == 'audio':
-            with open(filename, 'rb') as fp:
-                msg = MIMEAudio(fp.read(), _subtype=subtype)
+            with open(fn, 'rb') as fp:
+                attachement = MIMEAudio(fp.read(), _subtype=subtype)
+                fp.close()
+        elif maintype == 'application' and subtype == 'pdf':
+            with open(fn, 'rb') as fp:
+                attachement = MIMEApplication(fp.read(), _subtype=subtype)
+                fp.close()
         else:
-            with open(filename, 'rb') as fp:
-                msg = MIMEBase(maintype, subtype)
-                msg.set_payload(fp.read())
-            # Encode the payload using Base64
-            encoders.encode_base64(msg)
+            with open(fn, 'rb') as fp:
+                attachement = MIMEApplication(fp.read(), _subtype='db')
+                #attachement = MIMEBase(maintype, subtype)
+                #attachement.set_payload(encodebytes(fp.read()).decode())
+                #attachement.set_payload(fp.read())
+                #fp.close()
+        # Encode the payload using Base64
+        #encoders.encode_base64(attachement)
         # Set the filename parameter
-        msg.add_header('Content-Disposition', 'attachment', filename=filename)
-        msg.attach(msg)
-
+        #attachement.add_header('Content-Transfer-Encoding', 'base64')
+        #fname = os.path.basename(fn)
+        attachement.add_header('Content-Disposition', 'attachment', filename=os.path.basename(fn))
+        msg.attach(attachement)
+        #print (attachement)
         # Now send or store the message
-        composed = msg.as_string()
+        #composed = msg.as_string()
 
-
-
-
-
-
-        #ctype, encoding = mimetypes.guess_type(filename)
-        #if ctype is None or encoding is not None:
-        #    ctype = 'application/octet-stream'
-        #maintype, subtype = ctype.split('/', 1)
-
-        #file_msg = email.mime.base.MIMEBase(maintype, subtype)
-
-        #data = open(filename, 'rb')
-        #file_msg.set_payload(data.read())
-        #data.close()
-        #email.encoders.encode_base64(file_msg)
-
-        #print (ctype, encoding)
-
-        #fp = open(filename, 'rb')
-        #part = email.mime.base.MIMEBase('application', "octet-stream")
-        #part.set_payload(encodebytes(fp.read()).decode())
-        #fp.close()
-        #part.add_header('Content-Transfer-Encoding', 'base64')
-        #part.add_header('Content-Disposition', 'attachment; filename="%s"' % filename)
-        #msg.attach(part)  # msg is an instance of MIMEMultipart()
-
-        #msg.attach(file_msg)
-
-
-        ## 设置附件头
-        #basename = os.path.basename(filename)
-        #file_msg.add_header('Content-Disposition', 'attachment', filename=basename)  # 修改邮件头
-        #.attach(file_msg)
-
-
+    
         try:
             _sender = smtplib.SMTP()
             _sender.connect(self.HOST, self.PORT) # 25 为 SMTP 端口号
@@ -127,7 +99,7 @@ class sina_mail(object):
             #_sender.starttls()
             _sender.login(self.USER, self.PASS)
             #_sender.sendmail(self.FROM, mail_to, msg.as_string())
-            _sender.sendmail(self.FROM, mail_to,composed)
+            _sender.sendmail(self.FROM, mail_to,msg.as_string())
             _sender.quit()
 
             print ("Success")
