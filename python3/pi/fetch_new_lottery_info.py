@@ -4,6 +4,11 @@ import getopt
 import re
 import sys
 import urllib.request
+import chardet
+import zlib
+
+
+type = sys.getfilesystemencoding()
 
 from bs4 import BeautifulSoup
 
@@ -98,7 +103,12 @@ def fetch_page_content(limit):
     print ("http://datachart.500.com/ssq/history/newinc/history.php?limit="+str(limit)+"&sort=0")
     with urllib.request.urlopen(req) as response:
         req_html_doc = response.read()
-    my_soup = BeautifulSoup(req_html_doc)
+        req_html_doc = zlib.decompress(req_html_doc, 16 + zlib.MAX_WBITS)
+        print(chardet.detect(req_html_doc))
+        #req_html_doc=str(response.read(), 'windows-1252')
+        #req_html_doc = unicode(req_html_doc, 'GBK').encode('UTF-8')
+    my_soup = BeautifulSoup(req_html_doc, "html5lib")
+    print (my_soup.original_encoding)
     return my_soup
 
 
