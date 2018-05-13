@@ -49,12 +49,12 @@ class predictor_ss():
         # print(self.red_dict)
         # print(self.blue_dict)
 
-    def __readdata__(self):
+    def __readdata__(self,yearsNum):
         # 从文件读取彩票中奖纪录
         with open(self.fle, encoding='utf8') as ball_file:
         #ball_file = open(self.fle, 'r')
             ball_lst = ball_file.readline()
-            for i in range(1, self.qishu[2]):
+            for i in range(1, self.qishu[2]*yearsNum):
                 ball_lst = ball_file.readline().split()
                 if len(ball_lst) <11:
                     break
@@ -107,8 +107,8 @@ class predictor_ss():
             # print('--------------------------------------')
             # print(self.blue_qz)
 
-    def init_data(self):  # 初始化读入数据、生成概率和权重数据结构
-        self.__readdata__()
+    def init_data(self,yearsNum):  # 初始化读入数据、生成概率和权重数据结构
+        self.__readdata__(yearsNum)
         self.__rate__()
         self.make_quanzhong()
 
@@ -223,11 +223,12 @@ def usage():
 
 if __name__ == '__main__':
     debug = 1
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:e:y:u:')
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:e:y:u:m:')
     startNo = ''
     endNo = ''
     singleY = ''
     isUpdateDB = 'f'
+    yearNum = 1
     for op, value in opts:
         if op == '-s':
             startNo = value
@@ -237,6 +238,8 @@ if __name__ == '__main__':
             singleY = value
         elif op == '-u':
             isUpdateDB = value
+        elif op == '-m':
+            yearNum = int(value)
         elif op == '-h':
             usage()
             sys.exit()
@@ -259,5 +262,5 @@ if __name__ == '__main__':
     generate_txt(rs)
     if debug:print('predictor_ss')
     b = predictor_ss()
-    b.init_data()
+    b.init_data(yearNum)
     print_all(b)

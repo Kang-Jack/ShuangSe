@@ -6,9 +6,10 @@ import sys
 import urllib.request
 
 from bs4 import BeautifulSoup
-
-# dblottery
-from pi import db_lite as dblottery
+import chardet
+import zlib
+import dblottery
+#from pi import db_lite as dblottery
 
 debug = 1
 
@@ -59,7 +60,8 @@ def insert_to_csv(lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_q
 
 
 def saveNewData2DB(limit):
-    db = dblottery.dblotterylite()
+    db = dblottery.dblottery()
+    #db = dblottery.dblotterylite()
     # output = file('2016-2017data.txt', 'w+')
     my_soup = fetch_page_content(limit)
     result = my_soup.findAll('tr')
@@ -98,6 +100,12 @@ def fetch_page_content(limit):
     print ("http://datachart.500.com/ssq/history/newinc/history.php?limit="+str(limit)+"&sort=0")
     with urllib.request.urlopen(req) as response:
         req_html_doc = response.read()
+        req_html_doc = zlib.decompress(req_html_doc, 16 + zlib.MAX_WBITS)
+        print(chardet.detect(req_html_doc))
+        # req_html_doc=str(response.read(), 'windows-1252')
+        # req_html_doc = unicode(req_html_doc, 'GBK').encode('UTF-8')
+    my_soup = BeautifulSoup(req_html_doc, "html5lib")
+    print(my_soup.original_encoding)
     my_soup = BeautifulSoup(req_html_doc)
     return my_soup
 
