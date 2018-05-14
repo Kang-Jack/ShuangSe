@@ -20,6 +20,7 @@ class predictor_ss():
         self.blue_rate = {}  # 篮球出现率字典
         self.red_qz = []  # 红球权重
         self.blue_qz = []  # 篮球权重
+        self.yearsNum = 1
         # 初始化存储字典
         for i in range(1, 34):
             self.__initdict__(i, self.red_dict)
@@ -46,18 +47,18 @@ class predictor_ss():
         for i in range(6):
             self.__count__(ball_lst[i], self.red_dict, data_long)
         self.__count__(ball_lst[6], self.blue_dict, data_long)
-        # print(self.red_dict)
-        # print(self.blue_dict)
+        print(self.red_dict)
+        print(self.blue_dict)
 
-    def __readdata__(self,yearsNum):
+    def __readdata__(self):
         # 从文件读取彩票中奖纪录
         with open(self.fle, encoding='utf8') as ball_file:
         #ball_file = open(self.fle, 'r')
             ball_lst = ball_file.readline()
-            for i in range(1, self.qishu[2]*yearsNum):
+            for i in range(1, self.qishu[2]*self.yearsNum):
                 ball_lst = ball_file.readline().split()
                 if len(ball_lst) <11:
-                    break
+                    continue
                 # print(ball_lst)
                 # red = ball_list[5:11]
                 # blue = ball_list[11:]
@@ -75,8 +76,8 @@ class predictor_ss():
 
     def __rateone__(self, qishu, data_long):  # 根据统计的一段时间内(以data_long为依据)的出现次数计算1-33,1-16的出现几率
         # 计算总出现的次数
-        redall = qishu * 6
-        blueall = qishu * 1
+        redall = qishu * 6 * self.yearsNum
+        blueall = qishu * 1 * self.yearsNum
         # 计算红球出现率
         for i in range(1, 34):
             self.red_rate[str(i)][data_long] = self.red_dict[str(i)][data_long] / redall
@@ -108,7 +109,8 @@ class predictor_ss():
             # print(self.blue_qz)
 
     def init_data(self,yearsNum):  # 初始化读入数据、生成概率和权重数据结构
-        self.__readdata__(yearsNum)
+        self.yearsNum = yearsNum
+        self.__readdata__()
         self.__rate__()
         self.make_quanzhong()
 
