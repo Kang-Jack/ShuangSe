@@ -8,10 +8,10 @@ from query_historical_data import historical_data
 from fetch_new_lottery_info import saveNewData2DB
 
 class predictor_ss():
-    def __init__(self):
+    def __init__(self,yearsNum):
         self.quanzhong = [2.618, 1.618, 4.236]  # 权重，分别为一周统计数据，一月统计数据，一年统计数据与完全随机权重的比值，表示对最后选出的号码的影响力大小，此数据依据最伟大的黄金分割点制定。
         # self.quanzhong = [1,1,1]
-        self.qishu = [4, 13, 153]  # 一周、一月、一年的彩票期数
+
         self.data_long = ['W', 'M', 'Y']  # 期数时间范围的长度表示
         self.fle = '123.txt'  # 打开彩票文件
         self.red_dict = {}  # 红球存储字典
@@ -20,7 +20,8 @@ class predictor_ss():
         self.blue_rate = {}  # 篮球出现率字典
         self.red_qz = []  # 红球权重
         self.blue_qz = []  # 篮球权重
-        self.yearsNum = 1
+        self.yearsNum = yearsNum
+        self.qishu = [4*yearsNum, 13*yearsNum, 153*yearsNum]  # 一周、一月、一年的彩票期数
         # 初始化存储字典
         for i in range(1, 34):
             self.__initdict__(i, self.red_dict)
@@ -47,15 +48,15 @@ class predictor_ss():
         for i in range(6):
             self.__count__(ball_lst[i], self.red_dict, data_long)
         self.__count__(ball_lst[6], self.blue_dict, data_long)
-        print(self.red_dict)
-        print(self.blue_dict)
+        #print(self.red_dict)
+        #print(self.blue_dict)
 
     def __readdata__(self):
         # 从文件读取彩票中奖纪录
         with open(self.fle, encoding='utf8') as ball_file:
         #ball_file = open(self.fle, 'r')
             ball_lst = ball_file.readline()
-            for i in range(1, self.qishu[2]*self.yearsNum):
+            for i in range(1, self.qishu[2]):
                 ball_lst = ball_file.readline().split()
                 if len(ball_lst) <11:
                     continue
@@ -76,8 +77,8 @@ class predictor_ss():
 
     def __rateone__(self, qishu, data_long):  # 根据统计的一段时间内(以data_long为依据)的出现次数计算1-33,1-16的出现几率
         # 计算总出现的次数
-        redall = qishu * 6 * self.yearsNum
-        blueall = qishu * 1 * self.yearsNum
+        redall = qishu * 6
+        blueall = qishu * 1
         # 计算红球出现率
         for i in range(1, 34):
             self.red_rate[str(i)][data_long] = self.red_dict[str(i)][data_long] / redall
@@ -108,8 +109,7 @@ class predictor_ss():
             # print('--------------------------------------')
             # print(self.blue_qz)
 
-    def init_data(self,yearsNum):  # 初始化读入数据、生成概率和权重数据结构
-        self.yearsNum = yearsNum
+    def init_data(self):  # 初始化读入数据、生成概率和权重数据结构
         self.__readdata__()
         self.__rate__()
         self.make_quanzhong()
@@ -246,7 +246,7 @@ if __name__ == '__main__':
             usage()
             sys.exit()
     if isUpdateDB != 'f':
-        if  debug:print('update new 50 records to db ')
+        if debug:print('update new 50 records to db ')
         saveNewData2DB(50)
 
     if debug:print('fetch records based on user option ')
@@ -263,6 +263,6 @@ if __name__ == '__main__':
     if debug:print('generate txt file ')
     generate_txt(rs)
     if debug:print('predictor_ss')
-    b = predictor_ss()
-    b.init_data(yearNum)
+    b = predictor_ss(yearNum)
+    b.init_data()
     print_all(b)

@@ -30,29 +30,6 @@ def handleBlueBalls(blueballs):
     return strball
 
 
-def saveNewData2CSV(csvFile, limit):
-    writer = csv.writer(csvFile)
-    # output = file('2016-2017data.txt', 'w+')
-    # req_html_doc = requests.get("http://baidu.lecai.com/lottery/draw/list/50?type=range&start="+startNo+"&end="+endNo).text
-    my_soup = fetch_page_content(limit)
-    result = my_soup.findAll('tr')
-    for each in result:
-        # parse Lottery SN
-        lottery_qihao = parse_qihao(each)
-        if len(lottery_qihao) != 0:
-            if debug: print (lottery_qihao)
-            # parse date
-            lottery_date = parse_date_info(each)
-            # parse red balls
-            lottery_haoma_red = parse_red_balls(each)
-            # parse blue ball
-            lottery_haoma_blue = parse_blue_balls(each)
-            # if len(lottery_qihao) != 0:
-            insert_to_csv(lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_qihao, writer)
-            # out_line = str(lottery_date) + lottery_qihao[0][1] + str(lottery_haoma_red) + str(lottery_haoma_blue) + '\n'
-            # output.write(out_line)
-
-
 def insert_to_csv(lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_qihao, writer):
     writer.writerow((
         "20" + lottery_qihao[0], handleRedBalls(lottery_haoma_red), handleBlueBalls(lottery_haoma_blue),
