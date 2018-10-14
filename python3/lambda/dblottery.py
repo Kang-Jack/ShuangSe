@@ -5,7 +5,7 @@ import os
 import sys
 
 import pymysql as MySQL  # for mac
-
+debug =0
 db_host = os.environ['dbhost']  # URL of the site to check, stored in the site environment variable
 db_user = os.environ['user']  # String expected to be on the page, stored in the expected environment variable
 db_password = os.environ['pd']
@@ -48,7 +48,7 @@ class dblottery:
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
         try:
-            print(insert_sql)
+            if debug: print(insert_sql)
             self.cursor.execute(insert_sql, [identifier, lottery_date, r1, r2, r3, r4, r5, r6, b1])
             self.connection.commit()
             return 1
