@@ -9,7 +9,7 @@ import chardet
 import zlib
 import dblottery
 
-debug = 1
+debug = 0
 
 
 def handleRedBalls(redballs):
@@ -66,16 +66,15 @@ def insert_to_db(db, lottery_date, lottery_haoma_blue, lottery_haoma_red, lotter
 
 
 def fetch_page_content(limit):
-    print("http://datachart.500.com/ssq/history/newinc/history.php")
     req = urllib.request.Request("http://datachart.500.com/ssq/history/newinc/history.php?limit="+str(limit)+"&sort=0")
-    print ("http://datachart.500.com/ssq/history/newinc/history.php?limit="+str(limit)+"&sort=0")
+    if debug: print ("http://datachart.500.com/ssq/history/newinc/history.php?limit="+str(limit)+"&sort=0")
     with urllib.request.urlopen(req) as response:
         req_html_doc = response.read()
         req_html_doc = zlib.decompress(req_html_doc, 16 + zlib.MAX_WBITS)
-        print(chardet.detect(req_html_doc))
+        if debug: print(chardet.detect(req_html_doc))
 
     my_soup = BeautifulSoup(req_html_doc, "html5lib")
-    print(my_soup.original_encoding)
+    if debug: print(my_soup.original_encoding)
     my_soup = BeautifulSoup(req_html_doc)
     return my_soup
 
