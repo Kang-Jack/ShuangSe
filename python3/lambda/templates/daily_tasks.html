@@ -1494,19 +1494,12 @@
                     <th class="small-12 large-3 columns first">
     </th>
                     <th class="small-12 large-8 columns last">
-      <table>
-        <tr>
-          <th>
-                  <b><h5>Standard Tasks</h5></b>
-                  <p><strong>Remember to do all of these today:</strong><br>
-                     1. Feed the dogs <br>
-                     2. Feed the rabbits <br>
-                     3. Feed the cats <br>
-                     4. Feed the turtles <br>
-                     5. Walk the dogs <br>
-                     6. Empty cat litterboxes</p>
-                </th>
-        </tr>
+      <table id="records">
+        
+    {% for item in records %}
+        <tr><td>{{ item }}</td></tr>
+    {% endfor %}
+        
       </table>
     </th>
              </tr></tbody></table>
