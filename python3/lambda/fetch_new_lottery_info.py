@@ -39,6 +39,7 @@ def saveNewData2DB(limit):
     my_soup = fetch_page_content(limit)
     result = my_soup.findAll('tr')
     i = 0
+    new_rec=[]
     for each in result:
         # parse Lottery SN
         lottery_qihao = parse_qihao(each)
@@ -52,10 +53,11 @@ def saveNewData2DB(limit):
             lottery_haoma_blue = parse_blue_balls(each)
             # writer.writerow((lottery_qihao[0][1],handleRedBalls(lottery_haoma_red),handleBlueBalls(lottery_haoma_blue),str(lottery_date[0])))
             rs = insert_to_db(db, lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_qihao)
-            if (rs == 1):
+            if (rs != '0'):
                 i = i + 1
+                new_rec.append[rs]
     if debug: print (i)
-    return i
+    return new_rec
 
 
 

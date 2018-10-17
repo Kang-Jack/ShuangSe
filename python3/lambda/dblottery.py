@@ -51,12 +51,12 @@ class dblottery:
             if debug: print(insert_sql)
             self.cursor.execute(insert_sql, [identifier, lottery_date, r1, r2, r3, r4, r5, r6, b1])
             self.connection.commit()
-            return 1
+            return insert_sql
         except MySQL.IntegrityError:
             pass
             print("duplicate indentifier %s" % identifier)
-            return 0
+            return '0'
         except Exception as e:
             self.connection.rollback()
             print("operation faild, Error:", e)
-            return 0
+            return '0'
