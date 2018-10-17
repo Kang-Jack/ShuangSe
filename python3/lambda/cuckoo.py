@@ -63,7 +63,7 @@ def render_daily_tasks_template():
     # Keep in mind this will run in GMT and you will need to adjust runtimes accordingly 
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     today = days[datetime.date.today().weekday()]
-    html_email = template.render(day_of_week = today, daily_tasks = tasks[today])
+    html_email = template.render(day_of_week = today, daily_tasks = tasks[today],records=days)
     plaintext_email = (
         "Remember to do all of these today:\n"
         "1. Feed the dogs\n"
