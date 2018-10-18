@@ -47,31 +47,44 @@ def render_come_to_work_template(employee_first_name):
     plaintext_email = 'Hello {0}, \nPlease remember to be into work by 8am'.format(employee_first_name)
     return html_email, plaintext_email, subject
 
-def render_daily_tasks_template():
-    subject = 'Daily Tasks Reminder'
+def render_records_updated_template(sqls):
+    subject = 'ShuangSe update records'
+
+    records=[[]]
+    for sql in sqls:
+        startI=sql.find('VALUES (')+8
+        if startI < 1:
+            continue
+        else :
+            strT = sql[startI:]
+            endI = strT.find(')')
+            strT = strT =strT[:endI]
+            records.append(strT.split(','))
+
     template = get_template_from_s3('daily_tasks.html')
     tasks = {
-        'Monday': '1. Clean the dog areas\n',
-        'Tuesday': '1. Clean the cat areas\n',
-        'Wednesday': '1. Feed the aligator\n',
-        'Thursday': '1. Clean the dog areas\n',
-        'Friday': '1. Clean the cat areas\n',
-        'Saturday': '1. Relax!\n2. Play with the puppies! It\'s the weekend!',
-        'Sunday': '1. Relax!\n2. Play with the puppies! It\'s the weekend!'
+        'Monday': '1. New lottery record update\n',
+        'Tuesday': '1. Lottery day!\n',
+        'Wednesday': '1. New lottery record update\n',
+        'Thursday': '1. Lottery day!\n',
+        'Friday': '1. New lottery record update\n',
+        'Saturday': '1. Relax!\n2. Play with the pets! It\'s the weekend!\n',
+        'Sunday': '1. Lottery day!\n'
     }
     # Gets an integer value from 0 to 6 for today (Monday - Sunday)
     # Keep in mind this will run in GMT and you will need to adjust runtimes accordingly 
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     today = days[datetime.date.today().weekday()]
-    html_email = template.render(day_of_week = today, daily_tasks = tasks[today],records=days)
+    html_email = template.render(day_of_week = today, daily_tasks = tasks[today], records = records, sqls = sqls)
     plaintext_email = (
-        "Remember to do all of these today:\n"
-        "1. Feed the dogs\n"
-        "2. Feed the rabbits\n"
-        "3. Feed the cats\n"
-        "4. Feed the turtles\n"
-        "5. Walk the dogs\n"
-        "6. Empty cat litterboxes\n"
+        "Remember of day:\n"
+        "1. Monday: New lottery record update\n"
+        "2. Tuesday: Lottery day!\n"
+        "3. Wednesday: New lottery record update\n"
+        "4. Thursday: Lottery day!\n"
+        "5. Friday: New lottery record update\n"
+        "6. Saturday: Relax!\n2. Play with the pets! It\'s the weekend!\n"
+        "7. Sunday:  Lottery day!\n"
         "And:\n"
         "{0}".format(tasks[today])
     )
@@ -126,11 +139,11 @@ def handler(event,context):
             employee_first_name = employee[1]
             html_email, plaintext_email, subject = render_come_to_work_template(employee_first_name)
             send_email(html_email, plaintext_email, subject, email)
-    elif 'daily_tasks' in event_trigger:
+    elif 'records_updated' in event_trigger:
         for employee in EMPLOYEES:
             email = []
             email.append(employee[0])
-            html_email, plaintext_email, subject = render_daily_tasks_template()
+            html_email, plaintext_email, subject = render_records_updated_template(context)
             send_email(html_email, plaintext_email, subject, email)
     elif 'pickup' in event_trigger:
         for client in CLIENTS:

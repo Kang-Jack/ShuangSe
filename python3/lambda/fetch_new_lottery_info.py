@@ -55,7 +55,7 @@ def saveNewData2DB(limit):
             rs = insert_to_db(db, lottery_date, lottery_haoma_blue, lottery_haoma_red, lottery_qihao)
             if (rs != '0'):
                 i = i + 1
-                new_rec.append[rs]
+                new_rec.append(rs)
     if debug: print (i)
     return new_rec
 

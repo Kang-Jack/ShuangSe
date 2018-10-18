@@ -13,7 +13,7 @@ def lambda_handler(event, context):
         if (rs == [] ):
             raise Exception('Validation failed')
         else:
-            
+            cuckoo.handler({'resources':['records_updated']},rs)
             print('Fetching done!')
             return event['time']
     except:

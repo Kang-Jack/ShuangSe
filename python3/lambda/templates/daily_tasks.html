@@ -1468,7 +1468,7 @@
       <table>
         <tr>
           <th>
-                  <h1 class="text-center">Daily Tasks!</h1>
+                  <h1 class="text-center">New lottery records update!</h1>
                   <center data-parsed="">
                   <img src="https://www.sendwithus.com/assets/img/zurb-template-images/cat-placeholder.png" valign="bottom" alt="Masthead Image" align="center" class="text-center">
                   </center>
@@ -1493,14 +1493,27 @@
               <table class="row"><tbody><tr> <!-- Main Digest content -->
                     <th class="small-12 large-3 columns first">
     </th>
-                    <th class="small-12 large-8 columns last">
-      <table id="records">
-        
-    {% for item in records %}
-        <tr><td>{{ item }}</td></tr>
-    {% endfor %}
-        
-      </table>
+    <th class="small-12 large-8 columns last">
+         <br>
+        <b><h5>New lottery records</h5></b>
+        <br>
+        <table id="records">
+              <tr><td>"IDENTIFIER"</td><td>"GENERATE_TIME"</td><td>"RED1"</td><td>"RED2"</td><td>"RED3"</td><td>"RED4"</td><td>"RED5"</td><td>"RED6"</td><td>"BLUE"</td></tr>
+        {% for item in records %}
+              <tr><td>{{ item[0] }}</td><td>{{ item[1] }}</td><td>{{ item[2] }}</td><td>{{ item[3] }}</td><td>{{ item[4] }}</td><td>{{ item[5] }}</td><td>{{ item[6] }}</td><td>{{ item [7]}}</td><td>{{ item[8] }}</td></tr>
+        {% endfor %}
+            
+        </table> 
+        <br>
+        <b><h5>DB update sqls</h5></b>  
+        <br>
+        <table id="sqls">
+            
+        {% for item in sqls %}
+            <tr><td>{{ item }}</td></tr>
+        {% endfor %}
+            
+        </table>
     </th>
              </tr></tbody></table>
              <hr>
@@ -1511,8 +1524,8 @@
       <table>
         <tr>
           <th>
-                  <b><h5>Periodic Tasks</h5></b>
-                  <p><strong>Remember it's {{day_of_week}} so we also need to:</strong><br>
+                  <b><h5>New lottery record updated</h5></b>
+                  <p><strong>Remember it's {{day_of_week}}, rememder of today:</strong><br>
                   {{daily_tasks}}
                   </p>
                 </th>
@@ -1529,7 +1542,7 @@
                   <center data-parsed="">
                     <br align="center" class="text-center"><br align="center" class="text-center">
                     <h5 align="center" class="text-center">Questions? Need more help?</h5>
-                    <table class="button text-center"><tr><td><table><tr><td><a href="mailto:staff@thewoofgarden.com">Email the staff!</a></td></tr></table></td></tr></table>
+                    <table class="button text-center"><tr><td><table><tr><td>Good Luck</td></tr></table></td></tr></table>
                     <br align="center" class="text-center">
                   </center>
                 </th>
@@ -1546,7 +1559,7 @@
       <table>
         <tr>
           <th>
-                  <p class="text-center footercopy">&#xA9; Copyright 2016 Sendwithus. All Rights Reserved.</p>
+                  <p class="text-center footercopy">&#xA9; Copyright 2018 Laserk. All Rights Reserved.</p>
                 </th>
 <th class="expander"></th>
         </tr>
