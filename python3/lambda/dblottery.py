@@ -51,7 +51,9 @@ class dblottery:
             if debug: print(insert_sql)
             self.cursor.execute(insert_sql, [identifier, lottery_date, r1, r2, r3, r4, r5, r6, b1])
             self.connection.commit()
-            return insert_sql
+            strR=insert_sql % (identifier, '\''+lottery_date+'\'', '\''+r1+'\'', '\''+r2+'\'', '\''+r3+'\'', '\''+r4+'\'', '\''+r5+'\'', '\''+r6+'\'', '\''+b1+'\'')
+            strR+';'
+            return strR
         except MySQL.IntegrityError:
             pass
             print("duplicate indentifier %s" % identifier)
