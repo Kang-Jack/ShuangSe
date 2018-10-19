@@ -11,6 +11,7 @@ def lambda_handler(event, context):
     try:
         rs = saveNewData2DB(50)
         if (rs == [] ):
+            cuckoo.handler({'resources':['error_reminder']}, 'context')
             raise Exception('Validation failed')
         else:
             cuckoo.handler({'resources':['records_updated']},rs)

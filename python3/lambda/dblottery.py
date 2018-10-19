@@ -62,3 +62,7 @@ class dblottery:
             self.connection.rollback()
             print("operation faild, Error:", e)
             return '0'
+
+
+
+       

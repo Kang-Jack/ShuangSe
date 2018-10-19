@@ -40,11 +40,14 @@ def get_template_from_s3(key):
         raise e
     return template
 
-def render_come_to_work_template(employee_first_name):
-    subject = 'Work Schedule Reminder'
+def render_error_reminder_template(employee_first_name):
+    subject = 'ShuangSe error Reminder'
     template = get_template_from_s3('come_to_work.html')
-    html_email = template.render(first_name = employee_first_name)
-    plaintext_email = 'Hello {0}, \nPlease remember to be into work by 8am'.format(employee_first_name)
+    template_vars = {
+        'first_name':employee_first_name
+    }
+    html_email = template.render(template_vars)
+    plaintext_email = 'Hello {0}, \nPlease check AWS, there is an error occurred!'.format(employee_first_name)
     return html_email, plaintext_email, subject
 
 def render_records_updated_template(sqls):
@@ -75,7 +78,13 @@ def render_records_updated_template(sqls):
     # Keep in mind this will run in GMT and you will need to adjust runtimes accordingly 
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     today = days[datetime.date.today().weekday()]
-    html_email = template.render(day_of_week = today, daily_tasks = tasks[today], records = records, sqls = sqls)
+    template_vars = {
+        'day_of_week':today,
+        'daily_tasks':tasks[today],
+        'records':records,
+        'sqls':sqls,
+    }
+    html_email = template.render(template_vars)
     plaintext_email = (
         "Remember of day:\n"
         "1. Monday: New lottery record update\n"
@@ -132,17 +141,18 @@ def send_email(html_email, plaintext_email, subject, recipients):
 def handler(event,context):
     event_trigger = event['resources'][0]
     print ('event triggered by ' + event_trigger)
-    if 'come_to_work' in event_trigger:
+    if 'error_reminder' in event_trigger:
         for employee in EMPLOYEES:
             email = []
             email.append(employee[0])
             employee_first_name = employee[1]
-            html_email, plaintext_email, subject = render_come_to_work_template(employee_first_name)
+            html_email, plaintext_email, subject = render_error_reminder_template(employee_first_name)
             send_email(html_email, plaintext_email, subject, email)
     elif 'records_updated' in event_trigger:
         for employee in EMPLOYEES:
             email = []
             email.append(employee[0])
+            context = ["INSERT INTO doubleball (IDENTIFIER,GENERATE_TIME,RED1,RED2,RED3,RED4,RED5,RED6,BLUE) VALUES (20181021,'2018-10-21','01','02','03','04','05','06','07')"]
             html_email, plaintext_email, subject = render_records_updated_template(context)
             send_email(html_email, plaintext_email, subject, email)
     elif 'pickup' in event_trigger:
