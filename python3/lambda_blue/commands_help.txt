@@ -1,0 +1,153 @@
+# This file should help you with the commands we'll be working through in this module.
+# I'll also include documentation and notes where I think they might be useful.
+# Commands will be unindented and uncommented (no # symbol at the beginning)
+
+# Part 1 - S3 Uploads
+# When you open up your demos file you'll see a templates folder.
+# Along with licence information are three modified html email templates.
+# Each template is ready to use with Jinja2 but we'll need to move it to an S3 bucket.
+# Keep in mind that bucket names are *globally* unique. Meaning you can't use mine!
+# Replace the-woof-garden-email-templates with your bucket name.
+# Also use the region you've been using throughout the cource.
+# The \ character is to escape line breaks and make the code more readable
+# Here is the command to create a bucket with the AWS CLI:
+
+aws s3api create-bucket \
+--bucket woof-garden-templates \
+--region us-east-1
+
+# Confirm the bucket was created
+
+aws s3 ls
+
+# Upload the templates to your s3 bucket
+# Make sure you're in the /templates folder in your terminal first
+
+aws s3 cp ../templates s3://woof-garden-templates --recursive
+
+# Confirm the files were moved to s3
+
+aws s3 ls woof-garden-templates
+
+# Notes:
+# Keep in mind that Lambda cron() scheduling is done on UTC.
+# To get a cron expression in your timezone you may need to change the values
+# 7am EST - cron(0 12 ? * MON-FRI *)
+# Noon EST - cron(0 17 ? * MON-FRI *)
+# 5pm EST - cron(0 22 ? * MON-FRI *)
+# Keep in mind time zone differences like Daylight Savings!
+
+# To add CloudWatch Events rules:
+aws events put-rule \
+--name come_to_work \
+--schedule-expression 'cron(0 12 ? * MON-FRI *)'
+
+aws events put-rule \
+--name daily_tasks \
+--schedule-expression 'cron(0 17 ? * MON-FRI *)'
+
+aws events put-rule \
+--name pickup \
+--schedule-expression 'cron(0 22 ? * MON-FRI *)'
+
+
+# With the events created make sure to modify your code skeleton
+# Come back for these commands when you need to test locally 
+
+# Testing the function from the command line:
+# Make sure you're in the directory with the cuckoo.py file
+# Open a Python shell
+
+python
+
+# In the python shell I'll put commands after >>>
+# import the function
+
+>>> import cuckoo
+
+# Call the handler function and give it a sample event
+# This event can either be the event ARN text or something else
+# that contains text that contains some of the text that the 
+# function is looking for. 
+# The text should contain:
+# 'come_to_work' or 'daily_tasks' or 'pickup'
+# We'll also put them into the following format to match 
+# the way they will be passed to the function by the AWS event
+
+>>> cuckoo.handler({'resources':['some text containing the word pickup']},'context')
+
+>>> cuckoo.handler({'resources':['arn:aws:events:us-east-1:444510800003:rule/come_to_work']}, 'context')
+
+>>> cuckoo.handler({'resources':['a great daily_tasks test']},'context')
+
+# If successful you won't see any output so check your email for the results!
+
+# Setup and Deployment 
+# 
+# To take a look at creating our function package locally you can open 
+# the setup.sh file in a text editor.
+# 
+# Deploying your function with the AWS CLI
+# First make sure you've created your zip function package
+# and you're in the same directory as that package.zip file
+# Then list the roles on your account.
+# We'll need to look for the role we created for this function earlier
+
+aws iam list-roles
+
+# We'll see something like this in the output:
+# arn:aws:iam::444510800003:role/the_woof_garden_cuckoo
+# Copy that role ARN because you'll need to replace the value
+# after --role in the below command:
+
+aws lambda create-function \
+--function-name woof_garden_cuckoo \
+--runtime python2.7 \
+--role arn:aws:iam::444510800003:role/the_woof_garden_cuckoo \
+--handler cuckoo.handler \
+--zip-file fileb://./package.zip
+
+# Configure events to trigger the function
+#
+#
+# List events
+
+aws events list-rules
+
+# We'll have the function trust events from each 
+# of these Cloudwatch Events
+
+aws lambda add-permission \
+--function-name woof_garden_cuckoo \
+--statement-id 1 \
+--action 'lambda:InvokeFunction' \
+--principal events.amazonaws.com \
+--source-arn arn:aws:events:us-east-1:444510800003:rule/pickup
+
+aws lambda add-permission \
+--function-name woof_garden_cuckoo \
+--statement-id 2 \
+--action 'lambda:InvokeFunction' \
+--principal events.amazonaws.com \
+--source-arn arn:aws:events:us-east-1:444510800003:rule/daily_tasks
+
+aws lambda add-permission \
+--function-name woof_garden_cuckoo \
+--statement-id 3 \
+--action 'lambda:InvokeFunction' \
+--principal events.amazonaws.com \
+--source-arn arn:aws:events:us-east-1:444510800003:rule/come_to_work
+
+# This will add the lambda function to each of the rules to be triggered
+aws events put-targets \
+--rule daily_tasks \
+--targets '{"Id" : "1", "Arn": "arn:aws:lambda:us-east-1:444510800003:function:woof_garden_cuckoo"}'
+
+aws events put-targets \
+--rule come_to_work \
+--targets '{"Id" : "1", "Arn": "arn:aws:lambda:us-east-1:444510800003:function:woof_garden_cuckoo"}'
+
+aws events put-targets \
+--rule pickup \
+--targets '{"Id" : "1", "Arn": "arn:aws:lambda:us-east-1:444510800003:function:woof_garden_cuckoo"}'
+
